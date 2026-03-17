@@ -1,0 +1,27 @@
+# Copyright (c) 2026 ARS Embedded Systems LLC
+# SPDX-License-Identifier: Apache-2.0
+
+description: |
+  Worldsemi WS2812 LED strip, PWM (with DMA) binding
+
+  Driver bindings for controlling a WS2812 or compatible LED
+  strip with PWM and DMA.
+
+compatible: "worldsemi,ws2812-pwm"
+
+include: [base.yaml, ws2812.yaml]
+
+properties:
+  pwms:
+    required: true
+    type: phandle-array
+    description: PWM output used to generate the WS2812 waveform
+
+  dmas:
+    required: true
+    type: phandle-array
+    description: DMA channel feeding timer compare values
+
+  dma-names:
+    type: string-array
+    required: true

@@ -121,3 +121,23 @@ config WS2812_STRIP_RPI_PICO_PIO
 	help
 	  Enable driver for WS2812 (and compatible) LED strips using
 	  the Raspberry Pi Pico's PIO.
+
+config WS2812_STRIP_PWM
+	bool "WS2812 LED strip PWM (with DMA) driver"
+	default y
+	depends on DT_HAS_WORLDSEMI_WS2812_PWM_ENABLED
+	select PWM
+	select DMA
+	help
+	  Enable driver for WS2812 (and compatible) LED strips using PWM and DMA.
+
+if WS2812_STRIP_PWM
+
+config WS2812_STRIP_PWM_FORCE_NOCACHE
+	bool "Place led buffer in __nocache section"
+	default y if DCACHE && DMA
+	help
+	  For PWM driven by DMA, place the WS2812 PWM buffer in the __nocache section to
+	  ensure it is stored in uncached memory, as DMA usually requires access to uncached regions.
+
+endif

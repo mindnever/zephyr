@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2026, ARS Embedded Systems LLC
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <zephyr/dt-bindings/led/led.h>
+#include <zephyr/dt-bindings/pwm/stm32_pwm.h>
+
+&timers15 {
+	status = "okay";
+	st,prescaler = <0>;
+
+	pwm15: pwm {
+		status = "okay";
+		pinctrl-0 = <&tim15_ch1n_pe4>;
+		pinctrl-names = "default";
+	};
+};
+
+/ {
+	led_strip: ws2812 {
+		compatible = "worldsemi,ws2812-pwm";
+		pwms = <&pwm15 1 PWM_NSEC(1250) (PWM_POLARITY_NORMAL | STM32_PWM_COMPLEMENTARY)>;
+		dmas = <&gpdma1 0 94 (STM32_DMA_PERIPH_TX | STM32_DMA_16BITS |
+				STM32_DMA_PRIORITY_HIGH)>;
+		dma-names = "tx";
+		chain-length = <16>;
+		color-mapping = <LED_COLOR_ID_GREEN
+					 LED_COLOR_ID_RED
+					 LED_COLOR_ID_BLUE>;
+		status = "okay";
+	};
+
+	aliases {
+		led-strip = &led_strip;
+	};
+    
+};
+
+&gpdma1 {
+	status = "okay";
+};
